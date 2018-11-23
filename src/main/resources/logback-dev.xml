@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="60 seconds" debug="false">
+    <!--设置上下文名称，可有可无-->
+    <contextName>logback_dao</contextName>
+    <!--定义变量值，通过${}访问-->
+    <property name="log.file" value="./flnet-log/web_logs/dev.log" />
+    <!--输出到控制台,appender是用来格式化日志输出节点，其中class值用来指出以哪种输出方式打印-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--展示layout格式，控制台输出用layout，文件输出用encoder-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!--输出到文件-->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.file}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件保留名-->
+            <fileNamePattern>web_dev.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--必选节点，可以包含多个元素-->
+    <root level="info">
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+    </root>
+
+    <!-- show parameters for hibernate sql 专为 Hibernate 定制 -->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder"  level="TRACE" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"  level="DEBUG" />
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />
+    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />
+
+    <!--myibatis log configure-->
+    <logger name="com.apache.ibatis" level="TRACE"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+    <!--logback.LogbackDemo：类的全路径 -->
+    <logger name="com.flnet.iot" level="DEBUG" additivity="false">
+        <appender-ref ref="console"/>
+    </logger>
+
+</configuration>
